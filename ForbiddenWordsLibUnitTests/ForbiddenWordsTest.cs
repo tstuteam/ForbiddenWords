@@ -8,7 +8,7 @@ namespace ForbiddenWordsLibUnitTests
         [Fact]
         public void Test1()
         {
-            Assert.Equal(2, MathUtils.Gcd(2, 8));
+            Assert.Equal(6, MathUtils.Lcm(2, 3));
         }
     }
 }

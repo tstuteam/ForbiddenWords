@@ -5,17 +5,177 @@ namespace ForbiddenWordsLib
 {
     public class ForbiddenWord
     {
-        public int Penalty;
         public string Word;
+        public int Penalty;
 
         public ForbiddenWord()
         {
             Word = "";
             Penalty = 0;
         }
+
+        public ForbiddenWord(string word, int penalty)
+        {
+            Word = word;
+            Penalty = penalty;
+        }
     }
 
-    public class StringUtils
+
+    public class ForbiddenWordUtils
+    {
+        // TODO(andreymlv): Исправить комментарии
+
+        /// <summary>
+        ///     В трёхбуквенном алфавите `WIN` требуется написать слово Best заданной длины `М`,
+        ///     минимизируя штраф за вхождение запрещенных слов в написанное слово.
+        /// </summary>
+        /// <param name="sequenceLength"></param>
+        /// <param name="forbiddenWordsCount"></param>
+        /// <param name="forbiddenWords"></param>
+        /// <returns></returns>
+        public ForbiddenWord MakeBestWord(int sequenceLength, int forbiddenWordsCount,
+            List<ForbiddenWord> forbiddenWords)
+        {
+            var wordRepetitions = new List<ForbiddenWord>();
+            for (var i = 0; i < forbiddenWordsCount; ++i)
+                wordRepetitions.Add(new ForbiddenWord());
+
+            ExpandWord(forbiddenWords, wordRepetitions);
+
+            var bestWord = findBestSequenceWithShift(forbiddenWords,
+                FindBestSequence(forbiddenWords,
+                    wordRepetitions,
+                    sequenceLength),
+                sequenceLength);
+
+            return bestWord;
+        }
+
+        /// <summary>
+        ///     Находим лучшую последовательность с помощью сдвига двойной последовательности
+        /// </summary>
+        /// <param name="forbiddenWords"></param>
+        /// <param name="sequence"></param>
+        /// <param name="sequenceLength"></param>
+        /// <returns></returns>
+        private ForbiddenWord findBestSequenceWithShift(List<ForbiddenWord> forbiddenWords, ForbiddenWord sequence,
+            int sequenceLength)
+        {
+            var minWord = new ForbiddenWord(sequence.Word, sequence.Penalty);
+            var bestSequence = sequence.Word + sequence.Word;
+
+            for (var i = 1; i <= bestSequence.Length - sequenceLength; ++i)
+            {
+                var shiftSequence = bestSequence.Substring(i, sequenceLength);
+                var sequencePenalty = StringUtils.GetStringPenalty(shiftSequence, forbiddenWords);
+
+                if (sequencePenalty < minWord.Penalty)
+                {
+                    minWord.Word = shiftSequence;
+                    minWord.Penalty = sequencePenalty;
+                }
+            }
+
+            return minWord;
+        }
+
+        /// <summary>
+        ///     Добавляет к результирующей строке недостастающие символы до <paramref name="sequenceLength" />
+        /// </summary>
+        /// <param name="wordIndex">The index of the word</param>
+        /// <param name="sequenceLength"></param>
+        /// <param name="wordRepetitions"></param>
+        /// <returns>The repeated string</returns>
+        private string CompleteSequence(int wordIndex, int sequenceLength, List<ForbiddenWord> wordRepetitions)
+        {
+            var charIndex = 0;
+            var result = "";
+
+            while (result.Length < sequenceLength)
+            {
+                var sequenceText = wordRepetitions[wordIndex].Word;
+
+                result += sequenceText[charIndex];
+                charIndex = (charIndex + 1) % sequenceText.Length;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     Находим лучшую последовательность, добавляя символы до sequenceLength
+        /// </summary>
+        /// <param name="forbiddenWords"></param>
+        /// <param name="wordRepetitions"></param>
+        /// <param name="sequenceLength"></param>
+        /// <returns></returns>
+        private ForbiddenWord FindBestSequence(List<ForbiddenWord> forbiddenWords, List<ForbiddenWord> wordRepetitions,
+            int sequenceLength)
+        {
+            var bestSequence = CompleteSequence(0, sequenceLength, wordRepetitions);
+            var minPenalty = StringUtils.GetStringPenalty(bestSequence, forbiddenWords);
+
+            for (var i = 1; i < forbiddenWords.Count; ++i)
+            {
+                var sequence = CompleteSequence(i, sequenceLength, wordRepetitions);
+                var penalty = StringUtils.GetStringPenalty(sequence, forbiddenWords);
+
+                if (penalty < minPenalty)
+                {
+                    bestSequence = sequence;
+                    minPenalty = penalty;
+                }
+            }
+
+            return new ForbiddenWord(bestSequence, minPenalty);
+        }
+
+        /// <summary>
+        ///     Expanding all words to the desired length
+        /// </summary>
+        /// <param name="forbiddenWords"></param>
+        /// <param name="wordRepetitions"></param>
+        private void ExpandWord(List<ForbiddenWord> forbiddenWords, List<ForbiddenWord> wordRepetitions)
+        {
+            var indexes = findIndexes(forbiddenWords);
+
+            var lcm = MathUtils.Lcm(forbiddenWords[indexes.Item1].Word.Length,
+                forbiddenWords[indexes.Item2].Word.Length);
+
+            for (var i = 0; i < forbiddenWords.Count; ++i)
+            {
+                while (wordRepetitions[i].Word.Length < lcm)
+                    wordRepetitions[i].Word += forbiddenWords[i].Word;
+
+                wordRepetitions[i].Penalty = StringUtils.GetStringPenalty(wordRepetitions[i].Word, forbiddenWords);
+            }
+        }
+
+        /// <summary>
+        ///     Находим индексы двух самых больших штрафов
+        /// </summary>
+        /// <param name="forbiddenWords"></param>
+        /// <returns></returns>
+        private (int, int) findIndexes(List<ForbiddenWord> forbiddenWords)
+        {
+            var firstIndex = 0;
+            var secondIndex = 0;
+            for (var i = forbiddenWords.Count - 1; i >= 0; i--)
+            {
+                if (forbiddenWords[i].Word.Length == forbiddenWords[i - 1].Word.Length)
+                    continue;
+
+                firstIndex = i;
+                secondIndex = i - 1;
+                break;
+            }
+
+            return (firstIndex, secondIndex);
+        }
+    }
+
+    public static class StringUtils
     {
         /// <summary>
         ///     Finds the number of occurrences of <paramref name="substr" /> in <paramref name="str" />
@@ -23,6 +183,9 @@ namespace ForbiddenWordsLib
         /// <param name="str">The string to search in</param>
         /// <param name="substr">The substring to search for</param>
         /// <returns>The number of occurrences</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         private static int Occurrences(string str, string substr)
         {
             var occurrences = 0;
@@ -41,8 +204,9 @@ namespace ForbiddenWordsLib
         ///     Calculates the string penalty
         /// </summary>
         /// <param name="str">The string</param>
+        /// <param name="forbiddenWords"></param>
         /// <returns>The string penalty</returns>
-        public int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
+        public static int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
         {
             var penalty = 0;
 
@@ -51,32 +215,12 @@ namespace ForbiddenWordsLib
 
             return penalty;
         }
-
-        /// <summary>
-        ///     Repeats the word under index <paramref name="wordIndex" /> and
-        ///     writes it to wordRepetitions
-        /// </summary>
-        /// <param name="wordIndex">The index of the word</param>
-        /// <returns>The repeated string</returns>
-        public string BuildResult(int wordIndex, int sequenceLength, List<ForbiddenWord> wordRepetitions)
-        {
-            var charIndex = 0;
-            var result = "";
-
-            while (result.Length < sequenceLength)
-            {
-                var sequenceText = wordRepetitions[wordIndex].Word;
-
-                result += sequenceText[charIndex];
-                charIndex = (charIndex + 1) % sequenceText.Length;
-            }
-
-            return result;
-        }
     }
 
     public static class MathUtils
     {
+        // TODO(andreymlv): Исправить комментарии
+
         private static readonly int[] Lookup =
         {
             32, 0, 1, 26, 2, 23, 27, 0, 3, 16, 24, 30, 28, 11, 0, 13, 4, 7, 17,
@@ -99,15 +243,14 @@ namespace ForbiddenWordsLib
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns>Greatest common divisor</returns>
-        public static int Gcd(int a, int b)
+        private static int Gcd(int a, int b)
         {
             // Stein's binary GCD algorithm
             // Base cases: gcd(n, 0) = gcd(0, n) = n
-            if (a == 0) {
+            if (a == 0)
                 return b;
-            } else if (b == 0) {
+            if (b == 0)
                 return a;
-            }
 
             // Extract common factor-2: gcd(2ⁱ n, 2ⁱ m) = 2ⁱ gcd(n, m)
             // and reducing until odd gcd(2ⁱ n, m) = gcd(n, m) if m is odd
@@ -116,17 +259,15 @@ namespace ForbiddenWordsLib
             a >>= kA;
             b >>= kB;
             var k = Math.Min(kA, kB);
-            
+
             while (true)
             {
-                if (a > b) {
+                if (a > b)
                     Swap(ref a, ref b);
-                }
                 b -= a;
 
-                if (b == 0) {
+                if (b == 0)
                     return a << k;
-                }
 
                 b >>= TrailingZeros(b);
             }
