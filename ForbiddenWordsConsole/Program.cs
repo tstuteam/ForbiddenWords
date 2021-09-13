@@ -9,17 +9,18 @@ namespace ForbiddenWordsConsole
         static void Main(string[] args)
         {
             var strUtils = new StringUtils();
-            var mathUtils = new MathUtils();
             var forbiddenWords = new List<ForbiddenWord>();
             var wordRepetitions = new List<ForbiddenWord>();
+            var usedLetters = new HashSet<char>();
 
             Console.WriteLine("Sequence length");
-            int sequenceLength = int.Parse(Console.ReadLine());
+            var sequenceLength = int.Parse(Console.ReadLine());
 
             Console.WriteLine("Enter the number of forbidden words");
-            int forbiddenWordsCount = int.Parse(Console.ReadLine());
+            var forbiddenWordsCount = int.Parse(Console.ReadLine());
 
-            for (int i = 0; i < sequenceLength; i++)
+
+            for (var i = 0; i < forbiddenWordsCount; ++i)
             {
                 forbiddenWords.Add(new ForbiddenWord());
                 wordRepetitions.Add(new ForbiddenWord());
@@ -27,42 +28,40 @@ namespace ForbiddenWordsConsole
 
             Console.WriteLine("Enter forbidden words and their penalties");
 
-            var usedLetters = new HashSet<char>();
-
-            for (int i = 0; i < forbiddenWordsCount; ++i)
+            for (var i = 0; i < forbiddenWordsCount; ++i)
             {
                 var line = Console.ReadLine();
                 var splitLine = line.Split(' ');
 
-                forbiddenWords[i].forbiddenWord = splitLine[0].ToUpper();
-                forbiddenWords[i].penalty = int.Parse(splitLine[1]);
+                forbiddenWords[i].Word = splitLine[0].ToUpper();
+                forbiddenWords[i].Penalty = int.Parse(splitLine[1]);
 
-                if (forbiddenWords[i].forbiddenWord.Length == 1)
-                    usedLetters.Add(forbiddenWords[i].forbiddenWord[0]);
+                if (forbiddenWords[i].Word.Length == 1)
+                    usedLetters.Add(forbiddenWords[i].Word[0]);
             }
 
-            int lcm = mathUtils.LCM(forbiddenWords[0].forbiddenWord.Length, forbiddenWords[1].forbiddenWord.Length);
+            var lcm = MathUtils.LCM(forbiddenWords[0].Word.Length, forbiddenWords[1].Word.Length);
 
-            for (int i = 2; i < forbiddenWordsCount; ++i)
+            for (var i = 2; i < forbiddenWordsCount; ++i)
             {
-                lcm = mathUtils.LCM(forbiddenWords[i].forbiddenWord.Length, lcm);
+                lcm = MathUtils.LCM(forbiddenWords[i].Word.Length, lcm);
             }
 
-            for (int i = 0; i < forbiddenWordsCount; ++i)
+            for (var i = 0; i < forbiddenWordsCount; ++i)
             {
-                while (wordRepetitions[i].forbiddenWord.Length < lcm)
-                    wordRepetitions[i].forbiddenWord += forbiddenWords[i].forbiddenWord;
+                while (wordRepetitions[i].Word.Length < lcm)
+                    wordRepetitions[i].Word += forbiddenWords[i].Word;
 
-                wordRepetitions[i].penalty = strUtils.GetStringPenalty(wordRepetitions[i].forbiddenWord, forbiddenWords);
+                wordRepetitions[i].Penalty = strUtils.GetStringPenalty(wordRepetitions[i].Word, forbiddenWords);
             }
 
 
-            string bestSequence = strUtils.BuildString(0, sequenceLength, wordRepetitions);
-            int minPenalty = strUtils.GetStringPenalty(bestSequence, forbiddenWords);
+            var bestSequence = strUtils.BuildResult(0, sequenceLength, wordRepetitions);
+            var minPenalty = strUtils.GetStringPenalty(bestSequence, forbiddenWords);
 
-            for (int i = 1; i < forbiddenWordsCount; ++i)
+            for (var i = 1; i < forbiddenWordsCount; ++i)
             {
-                var sequence = strUtils.BuildString(i, sequenceLength, wordRepetitions);
+                var sequence = strUtils.BuildResult(i, sequenceLength, wordRepetitions);
                 var penalty = strUtils.GetStringPenalty(sequence, forbiddenWords);
 
                 if (penalty < minPenalty)
@@ -77,7 +76,7 @@ namespace ForbiddenWordsConsole
             var minSequence = bestSequence.Substring(0, sequenceLength);
             minPenalty = strUtils.GetStringPenalty(minSequence, forbiddenWords);
 
-            for (int i = 1; i <= bestSequence.Length - sequenceLength; ++i)
+            for (var i = 1; i <= bestSequence.Length - sequenceLength; ++i)
             {
                 var sequence = bestSequence.Substring(i, sequenceLength);
                 var sequencePenalty = strUtils.GetStringPenalty(sequence, forbiddenWords);

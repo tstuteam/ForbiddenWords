@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ForbiddenWordsLib
 {
     public class ForbiddenWord
     {
-        public string forbiddenWord;
-        public int penalty;
+        public string Word;
+        public int Penalty;
 
         public ForbiddenWord()
         {
-            forbiddenWord = "";
-            penalty = 0;
+            Word = "";
+            Penalty = 0;
         }
     }
 
@@ -22,12 +23,12 @@ namespace ForbiddenWordsLib
         /// <param name="str">The string to search in</param>
         /// <param name="substr">The substring to search for</param>
         /// <returns>The number of occurrences</returns>
-        public int Occurrences(string str, string substr)
+        private static int Occurrences(string str, string substr)
         {
-            int occurrences = 0;
-            int pos = 0;
+            var occurrences = 0;
+            var pos = 0;
 
-            while ((pos = str.IndexOf(substr, pos)) != -1)
+            while ((pos = str.IndexOf(substr, pos, StringComparison.Ordinal)) != -1)
             {
                 ++occurrences;
                 ++pos;
@@ -43,11 +44,10 @@ namespace ForbiddenWordsLib
         /// <returns>The string penalty</returns>
         public int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
         {
-            // TODO(andreymlv): Make propper comments (arguments)
-            int penalty = 0;
+            var penalty = 0;
 
             foreach (var sequence in forbiddenWords)
-                penalty += sequence.penalty * Occurrences(str, sequence.forbiddenWord);
+                penalty += sequence.Penalty * Occurrences(str, sequence.Word);
 
             return penalty;
         }
@@ -58,15 +58,14 @@ namespace ForbiddenWordsLib
         /// </summary>
         /// <param name="wordIndex">The index of the word</param>
         /// <returns>The repeated string</returns>
-        public string BuildString(int wordIndex, int sequenceLength, List<ForbiddenWord> wordRepetitions)
+        public string BuildResult(int wordIndex, int sequenceLength, List<ForbiddenWord> wordRepetitions)
         {
-            // TODO(andreymlv): Make propper comments (arguments)
-            int charIndex = 0;
-            string result = "";
+            var charIndex = 0;
+            var result = "";
 
             while (result.Length < sequenceLength)
             {
-                var sequenceText = wordRepetitions[wordIndex].forbiddenWord;
+                var sequenceText = wordRepetitions[wordIndex].Word;
 
                 result += sequenceText[charIndex];
                 charIndex = (charIndex + 1) % sequenceText.Length;
@@ -76,7 +75,7 @@ namespace ForbiddenWordsLib
         }
     }
 
-    public class MathUtils
+    public static class MathUtils
     {
         /// <summary>
         /// Calculates the greatest common divisor of two numbers
@@ -84,7 +83,7 @@ namespace ForbiddenWordsLib
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns>Greatest common divisor</returns>
-        public int GCD(int a, int b)
+        public static int GCD(int a, int b)
         {
             if (b == 0)
                 return a;
@@ -97,7 +96,7 @@ namespace ForbiddenWordsLib
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns>Least common multiple</returns>
-        public int LCM(int a, int b)
+        public static int LCM(int a, int b)
         {
             return a * b / GCD(a, b);
         }
