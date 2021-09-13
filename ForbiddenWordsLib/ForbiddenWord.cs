@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ForbiddenWordsLib
 {
@@ -19,11 +20,65 @@ namespace ForbiddenWordsLib
             Word = word;
             Penalty = penalty;
         }
+
+    }
+    /// <summary>
+    /// working with a file
+    /// </summary>
+    public class WorkFile
+    {
+        /// <summary>
+        /// Reading a file
+        /// </summary>
+        /// <param name="strName">file name</param>
+        /// <param name="M">Длина выходного слова М</param>
+        /// <param name="lsw">Длина списка - `lsw`</param>
+        /// <returns>Array of strings of forbidden words</returns>
+        public static string[] ReedFall(string strName, out int M, out int lsw)
+        {
+            string[] ArrFile;
+            StreamReader F;
+            F = new StreamReader(strName);
+            M = int.Parse(F.ReadLine());
+            lsw = int.Parse(F.ReadLine());
+            ArrFile = new string[lsw];
+            for (int i = 0; i < lsw; i++)
+            {
+                ArrFile[i] = F.ReadLine();
+            }
+            F.Close();
+            return ArrFile;
+        }
+        /// <summary>
+        /// Converts an array to a list
+        /// </summary>
+        /// <param name="Arr">array</param>
+        /// <returns>list</returns>
+        public static List<ForbiddenWord> СonverterArrInList(string[] Arr)
+        {
+            var forbiddenWords = new List<ForbiddenWord>();
+            int fine = 0;
+            string Word = "";
+            for (int i = 0; i < Arr.Length; i++)
+            {
+                string[] Buf = Arr[i].Split(' ');
+                Word = Buf[0];
+                fine = int.Parse(Buf[1]);
+                forbiddenWords.Add(new ForbiddenWord() { Penalty = fine, Word = Word });
+            }
+            
+            return forbiddenWords;
+        }
+
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ForbiddenWordUtils
     {
+
         // TODO(andreymlv): Исправить комментарии
 
         /// <summary>
@@ -174,7 +229,9 @@ namespace ForbiddenWordsLib
             return (firstIndex, secondIndex);
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public static class StringUtils
     {
         /// <summary>
@@ -216,7 +273,9 @@ namespace ForbiddenWordsLib
             return penalty;
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public static class MathUtils
     {
         // TODO(andreymlv): Исправить комментарии
