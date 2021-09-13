@@ -85,13 +85,14 @@ namespace ForbiddenWordsLib
         ///     В трёхбуквенном алфавите `WIN` требуется написать слово Best заданной длины `М`,
         ///     минимизируя штраф за вхождение запрещенных слов в написанное слово.
         /// </summary>
-        /// <param name="sequenceLength"></param>
-        /// <param name="forbiddenWordsCount"></param>
-        /// <param name="forbiddenWords"></param>
-        /// <returns></returns>
+        /// <param name="sequenceLength">Длина выходного слова</param>
+        /// <param name="forbiddenWordsCount">Длина списка</param>
+        /// <param name="forbiddenWords">Список из запрещеных слов</param>
+        /// <returns> Слово `Best` </returns>
         public ForbiddenWord MakeBestWord(int sequenceLength, int forbiddenWordsCount,
             List<ForbiddenWord> forbiddenWords)
         {
+            //загатовка для слова
             var wordRepetitions = new List<ForbiddenWord>();
             for (var i = 0; i < forbiddenWordsCount; ++i)
                 wordRepetitions.Add(new ForbiddenWord());
@@ -189,8 +190,8 @@ namespace ForbiddenWordsLib
         /// <summary>
         ///     Expanding all words to the desired length
         /// </summary>
-        /// <param name="forbiddenWords"></param>
-        /// <param name="wordRepetitions"></param>
+        /// <param name="forbiddenWords">Словарь со штравами</param>
+        /// <param name="wordRepetitions">Пустой список</param>
         private void ExpandWord(List<ForbiddenWord> forbiddenWords, List<ForbiddenWord> wordRepetitions)
         {
             var indexes = findIndexes(forbiddenWords);
@@ -210,8 +211,8 @@ namespace ForbiddenWordsLib
         /// <summary>
         ///     Находим индексы двух самых больших штрафов
         /// </summary>
-        /// <param name="forbiddenWords"></param>
-        /// <returns></returns>
+        /// <param name="forbiddenWords">Словарь со штрафами</param>
+        /// <returns>!НЕ ПОНЯТНО!5 и 6?</returns>
         private (int, int) findIndexes(List<ForbiddenWord> forbiddenWords)
         {
             var firstIndex = 0;
@@ -261,7 +262,7 @@ namespace ForbiddenWordsLib
         ///     Calculates the string penalty
         /// </summary>
         /// <param name="str">The string</param>
-        /// <param name="forbiddenWords"></param>
+        /// <param name="forbiddenWords">Словарь запрещеных слов</param>
         /// <returns>The string penalty</returns>
         public static int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
         {
@@ -285,12 +286,20 @@ namespace ForbiddenWordsLib
             32, 0, 1, 26, 2, 23, 27, 0, 3, 16, 24, 30, 28, 11, 0, 13, 4, 7, 17,
             0, 25, 22, 31, 15, 29, 10, 12, 6, 0, 21, 14, 9, 5, 20, 8, 19, 18
         };
-
+        /// <summary>
+        /// Формула !НЕПОНЯТНО КАКАЯ!
+        /// </summary>
+        /// <param name="i">?НЕПОНЯТНО?</param>
+        /// <returns>?Непонятно?</returns>
         private static int TrailingZeros(int i)
         {
             return Lookup[(i & -i) % 37];
         }
-
+        /// <summary>
+        /// перестановка a = b, и наоборот        
+        /// </summary>
+        /// <param name="a">Число которое надо поменять</param>
+        /// <param name="b">Число на которое надо поменять</param>
         private static void Swap(ref int a, ref int b)
         {
             (a, b) = (b, a);
