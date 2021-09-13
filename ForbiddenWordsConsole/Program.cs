@@ -9,20 +9,32 @@ namespace ForbiddenWordsConsole
         private static void Main()
         {
             var fWUtils = new ForbiddenWordUtils();
-            var forbiddenWords = new List<ForbiddenWord>
-            {
-                new ForbiddenWord("I", 10),
-                new ForbiddenWord("N", 30),
-                new ForbiddenWord("W", 10),
-                new ForbiddenWord("WI", 1),
-                new ForbiddenWord("WW", 10),
-                new ForbiddenWord("II", 11),
-                new ForbiddenWord("WIW", 3),
-                new ForbiddenWord("IWI", 2)
-            };
+            //var forbiddenWords = new List<ForbiddenWord>
+            //{
+            //    new ForbiddenWord("I", 10),
+            //    new ForbiddenWord("N", 30),
+            //    new ForbiddenWord("W", 10),
+            //    new ForbiddenWord("WI", 1),
+            //    new ForbiddenWord("WW", 10),
+            //    new ForbiddenWord("II", 11),
+            //    new ForbiddenWord("WIW", 3),
+            //    new ForbiddenWord("IWI", 2)
+            //};
 
-            var bestWord = fWUtils.MakeBestWord(10, forbiddenWords.Count, forbiddenWords);
+            //var bestWord = fWUtils.MakeBestWord(10, forbiddenWords.Count, forbiddenWords);
+            //Console.WriteLine($"Best: {bestWord.Word}\nPenalty: {bestWord.Penalty}");
+            int M, lsw;
+            string strName = "test.txt";
+            string[] Arr ;
+            var forbiddenWords = new List<ForbiddenWord>();
+
+            Arr = ForbiddenWordsLib.WorkFile.ReedFall(strName, out M, out lsw);
+            forbiddenWords = ForbiddenWordsLib.WorkFile.СonverterArrInList(Arr);
+
+            var bestWord = fWUtils.MakeBestWord(M, forbiddenWords.Count, forbiddenWords);
             Console.WriteLine($"Best: {bestWord.Word}\nPenalty: {bestWord.Penalty}");
+            Console.ReadKey();
+
         }
     }
 }
