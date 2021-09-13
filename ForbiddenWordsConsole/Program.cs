@@ -4,9 +4,9 @@ using ForbiddenWordsLib;
 
 namespace ForbiddenWordsConsole
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
             var strUtils = new StringUtils();
             var forbiddenWords = new List<ForbiddenWord>();
@@ -14,10 +14,10 @@ namespace ForbiddenWordsConsole
             var usedLetters = new HashSet<char>();
 
             Console.WriteLine("Sequence length");
-            var sequenceLength = int.Parse(Console.ReadLine());
+            var sequenceLength = int.Parse(Console.ReadLine() ?? string.Empty);
 
             Console.WriteLine("Enter the number of forbidden words");
-            var forbiddenWordsCount = int.Parse(Console.ReadLine());
+            var forbiddenWordsCount = int.Parse(Console.ReadLine() ?? string.Empty);
 
 
             for (var i = 0; i < forbiddenWordsCount; ++i)
@@ -31,21 +31,22 @@ namespace ForbiddenWordsConsole
             for (var i = 0; i < forbiddenWordsCount; ++i)
             {
                 var line = Console.ReadLine();
-                var splitLine = line.Split(' ');
+                if (line != null)
+                {
+                    var splitLine = line.Split(' ');
 
-                forbiddenWords[i].Word = splitLine[0].ToUpper();
-                forbiddenWords[i].Penalty = int.Parse(splitLine[1]);
+                    forbiddenWords[i].Word = splitLine[0].ToUpper();
+                    forbiddenWords[i].Penalty = int.Parse(splitLine[1]);
+                }
 
                 if (forbiddenWords[i].Word.Length == 1)
                     usedLetters.Add(forbiddenWords[i].Word[0]);
             }
 
-            var lcm = MathUtils.LCM(forbiddenWords[0].Word.Length, forbiddenWords[1].Word.Length);
+            var lcm = MathUtils.Lcm(forbiddenWords[0].Word.Length, forbiddenWords[1].Word.Length);
 
             for (var i = 2; i < forbiddenWordsCount; ++i)
-            {
-                lcm = MathUtils.LCM(forbiddenWords[i].Word.Length, lcm);
-            }
+                lcm = MathUtils.Lcm(forbiddenWords[i].Word.Length, lcm);
 
             for (var i = 0; i < forbiddenWordsCount; ++i)
             {

@@ -1,6 +1,5 @@
-using System;
-using Xunit;
 using ForbiddenWordsLib;
+using Xunit;
 
 namespace ForbiddenWordsLibUnitTests
 {
@@ -9,7 +8,7 @@ namespace ForbiddenWordsLibUnitTests
         [Fact]
         public void Test1()
         {
-            Assert.Equal(2, MathUtils.GCD(2, 8));
+            Assert.Equal(2, MathUtils.Gcd(2, 8));
         }
     }
 }
