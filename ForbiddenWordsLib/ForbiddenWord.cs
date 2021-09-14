@@ -54,7 +54,7 @@ namespace ForbiddenWordsLib
         /// </summary>
         /// <param name="Arr">array</param>
         /// <returns>list</returns>
-        public static List<ForbiddenWord> СonverterArrInList(string[] Arr)
+        public static List<ForbiddenWord> ConverterArrInList(string[] Arr)
         {
             var forbiddenWords = new List<ForbiddenWord>();
             int fine = 0;
@@ -87,12 +87,12 @@ namespace ForbiddenWordsLib
         /// </summary>
         /// <param name="sequenceLength">Длина выходного слова</param>
         /// <param name="forbiddenWordsCount">Длина списка</param>
-        /// <param name="forbiddenWords">Список из запрещеных слов</param>
+        /// <param name="forbiddenWords">Список из запрещённых слов</param>
         /// <returns> Слово `Best` </returns>
         public ForbiddenWord MakeBestWord(int sequenceLength, int forbiddenWordsCount,
             List<ForbiddenWord> forbiddenWords)
         {
-            //загатовка для слова
+            // заготовка для слова
             var wordRepetitions = new List<ForbiddenWord>();
             for (var i = 0; i < forbiddenWordsCount; ++i)
                 wordRepetitions.Add(new ForbiddenWord());
@@ -190,7 +190,7 @@ namespace ForbiddenWordsLib
         /// <summary>
         ///     Expanding all words to the desired length
         /// </summary>
-        /// <param name="forbiddenWords">Словарь со штравами</param>
+        /// <param name="forbiddenWords">Словарь со штрафами</param>
         /// <param name="wordRepetitions">Пустой список</param>
         private void ExpandWord(List<ForbiddenWord> forbiddenWords, List<ForbiddenWord> wordRepetitions)
         {
@@ -262,7 +262,7 @@ namespace ForbiddenWordsLib
         ///     Calculates the string penalty
         /// </summary>
         /// <param name="str">The string</param>
-        /// <param name="forbiddenWords">Словарь запрещеных слов</param>
+        /// <param name="forbiddenWords">Словарь запрещённых слов</param>
         /// <returns>The string penalty</returns>
         public static int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
         {
