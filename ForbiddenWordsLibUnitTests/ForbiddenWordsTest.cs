@@ -149,24 +149,31 @@ namespace ForbiddenWordsLibUnitTests
             {
                 new ForbiddenWord("I", 10),
                 new ForbiddenWord("N", 30),
-                new ForbiddenWord("W", 10),
-                new ForbiddenWord("WI", 1),
-                new ForbiddenWord("WW", 10),
-                new ForbiddenWord("II", 11),
-                new ForbiddenWord("WIW", 3),
-                new ForbiddenWord("IWI", 2)
+                new ForbiddenWord("W", 10)
             };
-            int M;
-            
-            var lists = ForbiddenWordsLib.WorkFile.ReadFile("true.txt", out M);
+
+            var lists = ForbiddenWordsLib.WorkFile.ReadFile("true.txt", out int M);
             Assert.Equal(8, M);
-            //Assert.Equal(forbiddenWords, lists);
+            Assert.True(checkListWithForbiddenWords(lists, forbiddenWords));
         }
+
+        private bool checkListWithForbiddenWords(List<ForbiddenWord> forbiddenWords1, List<ForbiddenWord> forbiddenWords2)
+        {
+            for (int i = 0; i < forbiddenWords1.Count; i++)
+            {
+                if (forbiddenWords1[i].Word != forbiddenWords2[i].Word)
+                    return false;
+                if (forbiddenWords1[i].Penalty != forbiddenWords2[i].Penalty)
+                    return false;
+            }
+            return true;
+        }
+
         [Fact]
         public void TestWorkFileReadFilEemptyFile()
         {
-                      
-            Assert.Throws<ArgumentNullException>(()=>ForbiddenWordsLib.WorkFile.ReadFile("null.txt", out int M));
+
+            Assert.Throws<FormatException>(() => ForbiddenWordsLib.WorkFile.ReadFile("null.txt", out int M));
         }
 
         [Fact]

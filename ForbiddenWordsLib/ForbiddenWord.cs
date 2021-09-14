@@ -39,8 +39,8 @@ namespace ForbiddenWordsLib
             var fileContent = new List<string>();
             var file = new StreamReader(strName);
 
-            M = int.Parse(file.ReadLine());
-            var lsw = int.Parse(file.ReadLine());
+            M = int.Parse(file.ReadLine() ?? string.Empty);
+            var lsw = int.Parse(file.ReadLine() ?? string.Empty);
 
             for (int i = 0; i < lsw; i++)
                 fileContent.Add(file.ReadLine());
@@ -215,7 +215,7 @@ namespace ForbiddenWordsLib
         {
             var firstIndex = 0;
             var secondIndex = 0;
-            for (var i = forbiddenWords.Count - 1; i >= 0; i--)
+            for (var i = forbiddenWords.Count - 1; i >= 1; i--)
             {
                 if (forbiddenWords[i].Word.Length == forbiddenWords[i - 1].Word.Length)
                     continue;
