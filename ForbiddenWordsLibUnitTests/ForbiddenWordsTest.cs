@@ -141,6 +141,7 @@ namespace ForbiddenWordsLibUnitTests
 
             Assert.Throws<NullReferenceException>(() => fWUtils.MakeBestWord(8, 0, null));
         }
+
         [Fact]
         public void TestWorkFileReadFileReadingData()
         {
