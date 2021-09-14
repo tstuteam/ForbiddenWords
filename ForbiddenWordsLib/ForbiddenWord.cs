@@ -66,7 +66,7 @@ namespace ForbiddenWordsLib
                 fine = int.Parse(Buf[1]);
                 forbiddenWords.Add(new ForbiddenWord() { Penalty = fine, Word = Word });
             }
-            
+
             return forbiddenWords;
         }
 
