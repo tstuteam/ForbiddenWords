@@ -34,42 +34,43 @@ namespace ForbiddenWordsLib
         /// <param name="M">Длина выходного слова М</param>
         /// <param name="lsw">Длина списка - `lsw`</param>
         /// <returns>Array of strings of forbidden words</returns>
-        public static string[] ReedFall(string strName, out int M, out int lsw)
+        public static string[] ReadFile(string strName, out int M, out int lsw)
         {
-            string[] ArrFile;
-            StreamReader F;
-            F = new StreamReader(strName);
-            M = int.Parse(F.ReadLine());
-            lsw = int.Parse(F.ReadLine());
-            ArrFile = new string[lsw];
+            var file = new StreamReader(strName);
+
+            M = int.Parse(file.ReadLine());
+            lsw = int.Parse(file.ReadLine());
+
+            var fileContent = new string[lsw];
+
             for (int i = 0; i < lsw; i++)
             {
-                ArrFile[i] = F.ReadLine();
+                fileContent[i] = file.ReadLine();
             }
-            F.Close();
-            return ArrFile;
+
+            file.Close();
+
+            return fileContent;
         }
+
         /// <summary>
         /// Converts an array to a list
         /// </summary>
-        /// <param name="Arr">array</param>
+        /// <param name="fileContent">array</param>
         /// <returns>list</returns>
-        public static List<ForbiddenWord> ConverterArrInList(string[] Arr)
+        public static List<ForbiddenWord> ConverterArrInList(string[] fileContent)
         {
             var forbiddenWords = new List<ForbiddenWord>();
-            int fine = 0;
-            string Word = "";
-            for (int i = 0; i < Arr.Length; i++)
+
+            foreach (var v in fileContent)
             {
-                string[] Buf = Arr[i].Split(' ');
-                Word = Buf[0];
-                fine = int.Parse(Buf[1]);
-                forbiddenWords.Add(new ForbiddenWord() { Penalty = fine, Word = Word });
+                var buffer = v.Split(' ');
+
+                forbiddenWords.Add(new ForbiddenWord(buffer[0], int.Parse(buffer[1])));
             }
 
             return forbiddenWords;
         }
-
     }
 
 

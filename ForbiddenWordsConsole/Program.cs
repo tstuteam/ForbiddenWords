@@ -28,13 +28,12 @@ namespace ForbiddenWordsConsole
             string[] Arr ;
             var forbiddenWords = new List<ForbiddenWord>();
 
-            Arr = ForbiddenWordsLib.WorkFile.ReedFall(strName, out M, out lsw);
+            Arr = ForbiddenWordsLib.WorkFile.ReadFile(strName, out M, out lsw);
             forbiddenWords = ForbiddenWordsLib.WorkFile.ConverterArrInList(Arr);
 
             var bestWord = fWUtils.MakeBestWord(M, forbiddenWords.Count, forbiddenWords);
             Console.WriteLine($"Best: {bestWord.Word}\nPenalty: {bestWord.Penalty}");
             Console.ReadKey();
-
         }
     }
 }
