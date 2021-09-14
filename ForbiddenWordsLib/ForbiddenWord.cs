@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Linq;
 
 namespace ForbiddenWordsLib
@@ -241,7 +242,6 @@ namespace ForbiddenWordsLib
         /// <returns>The number of occurrences</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        /// <exception cref="ArgumentException"></exception>
         private static int Occurrences(string str, string substr)
         {
             var occurrences = 0;
@@ -262,6 +262,7 @@ namespace ForbiddenWordsLib
         /// <param name="str">The string</param>
         /// <param name="forbiddenWords">Словарь запрещённых слов</param>
         /// <returns>The string penalty</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
         {
             var penalty = 0;
@@ -278,21 +279,6 @@ namespace ForbiddenWordsLib
     public static class MathUtils
     {
         // TODO(andreymlv): Исправить комментарии
-
-        private static readonly int[] Lookup =
-        {
-            32, 0, 1, 26, 2, 23, 27, 0, 3, 16, 24, 30, 28, 11, 0, 13, 4, 7, 17,
-            0, 25, 22, 31, 15, 29, 10, 12, 6, 0, 21, 14, 9, 5, 20, 8, 19, 18
-        };
-        /// <summary>
-        /// Формула !НЕПОНЯТНО КАКАЯ!
-        /// </summary>
-        /// <param name="i">?НЕПОНЯТНО?</param>
-        /// <returns>?Непонятно?</returns>
-        private static int TrailingZeros(int i)
-        {
-            return Lookup[(i & -i) % 37];
-        }
         /// <summary>
         /// перестановка a = b, и наоборот        
         /// </summary>
@@ -320,8 +306,8 @@ namespace ForbiddenWordsLib
 
             // Extract common factor-2: gcd(2ⁱ n, 2ⁱ m) = 2ⁱ gcd(n, m)
             // and reducing until odd gcd(2ⁱ n, m) = gcd(n, m) if m is odd
-            var kA = TrailingZeros(a);
-            var kB = TrailingZeros(b);
+            var kA = BitOperations.TrailingZeroCount(a);
+            var kB = BitOperations.TrailingZeroCount(b);
             a >>= kA;
             b >>= kB;
             var k = Math.Min(kA, kB);
@@ -335,7 +321,7 @@ namespace ForbiddenWordsLib
                 if (b == 0)
                     return a << k;
 
-                b >>= TrailingZeros(b);
+                b >>= BitOperations.TrailingZeroCount(b);
             }
         }
 
