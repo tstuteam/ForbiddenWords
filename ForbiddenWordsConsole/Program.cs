@@ -23,17 +23,12 @@ namespace ForbiddenWordsConsole
 
             //var bestWord = fWUtils.MakeBestWord(10, forbiddenWords.Count, forbiddenWords);
             //Console.WriteLine($"Best: {bestWord.Word}\nPenalty: {bestWord.Penalty}");
-            int M, lsw;
-            string strName = "test.txt";
-            string[] Arr ;
-            var forbiddenWords = new List<ForbiddenWord>();
-
-            Arr = ForbiddenWordsLib.WorkFile.ReadFile(strName, out M, out lsw);
-            forbiddenWords = ForbiddenWordsLib.WorkFile.ConverterArrInList(Arr);
+            int M;
+            var strName = "test.txt";
+            var forbiddenWords = ForbiddenWordsLib.WorkFile.ReadFile(strName, out M);;
 
             var bestWord = fWUtils.MakeBestWord(M, forbiddenWords.Count, forbiddenWords);
             Console.WriteLine($"Best: {bestWord.Word}\nPenalty: {bestWord.Penalty}");
-            Console.ReadKey();
         }
     }
 }

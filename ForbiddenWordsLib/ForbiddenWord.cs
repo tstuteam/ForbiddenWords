@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ForbiddenWordsLib
 {
@@ -32,25 +33,21 @@ namespace ForbiddenWordsLib
         /// </summary>
         /// <param name="strName">file name</param>
         /// <param name="M">Длина выходного слова М</param>
-        /// <param name="lsw">Длина списка - `lsw`</param>
         /// <returns>Array of strings of forbidden words</returns>
-        public static string[] ReadFile(string strName, out int M, out int lsw)
+        public static List<ForbiddenWord> ReadFile(string strName, out int M)
         {
+            var fileContent = new List<string>();
             var file = new StreamReader(strName);
 
             M = int.Parse(file.ReadLine());
-            lsw = int.Parse(file.ReadLine());
-
-            var fileContent = new string[lsw];
+            var lsw = int.Parse(file.ReadLine());
 
             for (int i = 0; i < lsw; i++)
-            {
-                fileContent[i] = file.ReadLine();
-            }
+                fileContent.Add(file.ReadLine());
 
             file.Close();
 
-            return fileContent;
+            return ConvertFileToForbiddenWords(fileContent);
         }
 
         /// <summary>
@@ -58,13 +55,13 @@ namespace ForbiddenWordsLib
         /// </summary>
         /// <param name="fileContent">array</param>
         /// <returns>list</returns>
-        public static List<ForbiddenWord> ConverterArrInList(string[] fileContent)
+        private static List<ForbiddenWord> ConvertFileToForbiddenWords(List<string> fileContent)
         {
             var forbiddenWords = new List<ForbiddenWord>();
 
-            foreach (var v in fileContent)
+            foreach (var line in fileContent)
             {
-                var buffer = v.Split(' ');
+                var buffer = line.Split(' ');
 
                 forbiddenWords.Add(new ForbiddenWord(buffer[0], int.Parse(buffer[1])));
             }
