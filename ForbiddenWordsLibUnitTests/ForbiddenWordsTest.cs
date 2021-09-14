@@ -141,5 +141,38 @@ namespace ForbiddenWordsLibUnitTests
 
             Assert.Throws<NullReferenceException>(() => fWUtils.MakeBestWord(8, 0, null));
         }
+        [Fact]
+        public void TestWorkFileReadFileReadingData()
+        {
+            var forbiddenWords = new List<ForbiddenWord>
+            {
+                new ForbiddenWord("I", 10),
+                new ForbiddenWord("N", 30),
+                new ForbiddenWord("W", 10),
+                new ForbiddenWord("WI", 1),
+                new ForbiddenWord("WW", 10),
+                new ForbiddenWord("II", 11),
+                new ForbiddenWord("WIW", 3),
+                new ForbiddenWord("IWI", 2)
+            };
+            int M;
+            
+            var lists = ForbiddenWordsLib.WorkFile.ReadFile("true.txt", out M);
+            Assert.Equal(8, M);
+            //Assert.Equal(forbiddenWords, lists);
+        }
+        [Fact]
+        public void TestWorkFileReadFilEemptyFile()
+        {
+                      
+            Assert.Throws<ArgumentNullException>(()=>ForbiddenWordsLib.WorkFile.ReadFile("null.txt", out int M));
+        }
+
+        [Fact]
+        public void TestWorkFileReadFilIncorrectData()
+        {
+
+            Assert.Throws<FormatException>(() => ForbiddenWordsLib.WorkFile.ReadFile("Incorrect.txt", out int M));
+        }
     }
 }
