@@ -123,7 +123,7 @@ namespace ForbiddenWordsLib
         /// <param name="forbiddenWords">List of forbidden words</param>
         /// <returns>The word `Best`</returns>
         public ForbiddenWord MakeBestWordBruteForce(int sequenceLength, List<ForbiddenWord> forbiddenWords)
-		{
+        {
             var builder = new StringBuilder(sequenceLength, sequenceLength);
             builder.Length = sequenceLength;
 
@@ -132,7 +132,7 @@ namespace ForbiddenWordsLib
             MakeBestWordBruteForceRecursive(builder, sequenceLength, forbiddenWords, ref bestWord);
 
             return bestWord;
-		}
+        }
 
         /// <summary>
         ///     Goes through all possible combinations of `W`, `I` and `N`
@@ -144,17 +144,17 @@ namespace ForbiddenWordsLib
         /// <param name="bestWord">`ForbiddenWord` object to output to</param>
         private void MakeBestWordBruteForceRecursive(StringBuilder builder, int sequenceLength,
             List<ForbiddenWord> forbiddenWords, ref ForbiddenWord bestWord)
-		{
+        {
             if (sequenceLength == 0)
             {
                 var word = builder.ToString();
                 var penalty = StringUtils.GetStringPenalty(word, forbiddenWords);
 
                 if (penalty < bestWord.Penalty)
-				{
+                {
                     bestWord.Word = word;
                     bestWord.Penalty = penalty;
-				}
+                }
 
                 return;
             }
