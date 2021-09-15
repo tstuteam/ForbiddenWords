@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using System.Text;
 
 namespace ForbiddenWordsLib
 {
@@ -82,8 +83,8 @@ namespace ForbiddenWordsLib
     {
         /// <summary>
         ///     In the three-letter alphabet `WIN`,
-        ///     it is required to write the word Best
-        ///     of a given length` M`, minimizing
+        ///     it is required to write the word `Best`
+        ///     of a given length `M`, minimizing
         ///     the penalty for the occurrence of
         ///     forbidden words in the written word.
         /// </summary>
@@ -107,6 +108,65 @@ namespace ForbiddenWordsLib
                 sequenceLength);
 
             return bestWord;
+        }
+
+        /// <summary>
+        ///     Brute-force implementation of `MakeBestWord`.
+        ///     
+        ///     In the three-letter alphabet `WIN`,
+        ///     it is required to write the word `Best`
+        ///     of a given length `M`, minimizing
+        ///     the penalty for the occurrence of
+        ///     forbidden words in the written word.
+        /// </summary>
+        /// <param name="sequenceLength">Output word length</param>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <returns>The word `Best`</returns>
+        public ForbiddenWord MakeBestWordBruteForce(int sequenceLength, List<ForbiddenWord> forbiddenWords)
+        {
+            var builder = new StringBuilder(sequenceLength, sequenceLength);
+            builder.Length = sequenceLength;
+
+            var bestWord = new ForbiddenWord(string.Empty, int.MaxValue);
+
+            MakeBestWordBruteForceRecursive(builder, sequenceLength, forbiddenWords, ref bestWord);
+
+            return bestWord;
+        }
+
+        /// <summary>
+        ///     Goes through all possible combinations of `W`, `I` and `N`
+        ///     and outputs a sequence with the smallest penalty.
+        /// </summary>
+        /// <param name="builder">String builder of length <paramref name="sequenceLength"/></param>
+        /// <param name="sequenceLength">Length of the generated sequence</param>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <param name="bestWord">`ForbiddenWord` object to output to</param>
+        private void MakeBestWordBruteForceRecursive(StringBuilder builder, int sequenceLength,
+            List<ForbiddenWord> forbiddenWords, ref ForbiddenWord bestWord)
+        {
+            if (sequenceLength == 0)
+            {
+                var word = builder.ToString();
+                var penalty = StringUtils.GetStringPenalty(word, forbiddenWords);
+
+                if (penalty < bestWord.Penalty)
+                {
+                    bestWord.Word = word;
+                    bestWord.Penalty = penalty;
+                }
+
+                return;
+            }
+
+            builder[--sequenceLength] = 'W';
+            MakeBestWordBruteForceRecursive(builder, sequenceLength, forbiddenWords, ref bestWord);
+
+            builder[sequenceLength] = 'I';
+            MakeBestWordBruteForceRecursive(builder, sequenceLength, forbiddenWords, ref bestWord);
+
+            builder[sequenceLength] = 'N';
+            MakeBestWordBruteForceRecursive(builder, sequenceLength, forbiddenWords, ref bestWord);
         }
 
         /// <summary>
