@@ -122,6 +122,29 @@ namespace ForbiddenWordsLibUnitTests
         }
 
         [Fact]
+        public void TestMakeBestWordBruteForceValidInput()
+        {
+            var fWUtils = new ForbiddenWordUtils();
+
+            var forbiddenWords = new List<ForbiddenWord>
+            {
+                new("I", 10),
+                new("N", 30),
+                new("W", 10),
+                new("WI", 1),
+                new("WW", 10),
+                new("II", 11),
+                new("WIW", 3),
+                new("IWI", 2)
+            };
+
+            var bestWord = fWUtils.MakeBestWordBruteForce(8, forbiddenWords);
+
+            Assert.Equal("IWIWIWIW", bestWord.Word);
+            Assert.Equal(98, bestWord.Penalty);
+        }
+
+        [Fact]
         public void TestMakeBestWordWithEmptyInput()
         {
             var fWUtils = new ForbiddenWordUtils();
