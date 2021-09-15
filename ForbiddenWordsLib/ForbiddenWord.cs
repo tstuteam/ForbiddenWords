@@ -5,10 +5,13 @@ using System.Numerics;
 
 namespace ForbiddenWordsLib
 {
+    /// <summary>
+    ///     The class for storing the forbidden word and its penalty
+    /// </summary>
     public class ForbiddenWord
     {
-        public string Word;
         public int Penalty;
+        public string Word;
 
         public ForbiddenWord()
         {
@@ -21,28 +24,29 @@ namespace ForbiddenWordsLib
             Word = word;
             Penalty = penalty;
         }
-
     }
+
     /// <summary>
-    /// working with a file
+    ///     Class for working with a file
     /// </summary>
-    public class WorkFile
+    public static class WorkFile
     {
         /// <summary>
-        /// Reading a file
+        ///     Read the file.
+        ///     Parse each line according to the problem statement.
         /// </summary>
-        /// <param name="strName">file name</param>
-        /// <param name="M">Длина выходного слова М</param>
+        /// <param name="fileName">File name</param>
+        /// <param name="m">Output word length M</param>
         /// <returns>Array of strings of forbidden words</returns>
-        public static List<ForbiddenWord> ReadFile(string strName, out int M)
+        public static List<ForbiddenWord> ReadFile(string fileName, out int m)
         {
             var fileContent = new List<string>();
-            var file = new StreamReader(strName);
+            var file = new StreamReader(fileName);
 
-            M = int.Parse(file.ReadLine() ?? string.Empty);
+            m = int.Parse(file.ReadLine() ?? string.Empty);
             var lsw = int.Parse(file.ReadLine() ?? string.Empty);
 
-            for (int i = 0; i < lsw; i++)
+            for (var i = 0; i < lsw; i++)
                 fileContent.Add(file.ReadLine());
 
             file.Close();
@@ -51,10 +55,10 @@ namespace ForbiddenWordsLib
         }
 
         /// <summary>
-        /// Converts an array to a list
+        ///     Converts an array of strings to a list of forbidden words.
         /// </summary>
-        /// <param name="fileContent">array</param>
-        /// <returns>list</returns>
+        /// <param name="fileContent">File content</param>
+        /// <returns>List of forbidden words</returns>
         private static List<ForbiddenWord> ConvertFileToForbiddenWords(List<string> fileContent)
         {
             var forbiddenWords = new List<ForbiddenWord>();
@@ -72,25 +76,24 @@ namespace ForbiddenWordsLib
 
 
     /// <summary>
-    /// 
+    ///     Class for working with forbidden words.
     /// </summary>
     public class ForbiddenWordUtils
     {
-
-        // TODO(andreymlv): Исправить комментарии
-
         /// <summary>
-        ///     В трёхбуквенном алфавите `WIN` требуется написать слово Best заданной длины `М`,
-        ///     минимизируя штраф за вхождение запрещенных слов в написанное слово.
+        ///     In the three-letter alphabet `WIN`,
+        ///     it is required to write the word Best
+        ///     of a given length` M`, minimizing
+        ///     the penalty for the occurrence of
+        ///     forbidden words in the written word.
         /// </summary>
-        /// <param name="sequenceLength">Длина выходного слова</param>
-        /// <param name="forbiddenWordsCount">Длина списка</param>
-        /// <param name="forbiddenWords">Список из запрещённых слов</param>
-        /// <returns> Слово `Best` </returns>
+        /// <param name="sequenceLength">Output word length</param>
+        /// <param name="forbiddenWordsCount">List length</param>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <returns>The word `Best`</returns>
         public ForbiddenWord MakeBestWord(int sequenceLength, int forbiddenWordsCount,
             List<ForbiddenWord> forbiddenWords)
         {
-            // заготовка для слова
             var wordRepetitions = new List<ForbiddenWord>();
             for (var i = 0; i < forbiddenWordsCount; ++i)
                 wordRepetitions.Add(new ForbiddenWord());
@@ -107,12 +110,12 @@ namespace ForbiddenWordsLib
         }
 
         /// <summary>
-        ///     Находим лучшую последовательность с помощью сдвига двойной последовательности
+        ///     Finding the Best Sequence by Shifting the Double Sequence
         /// </summary>
-        /// <param name="forbiddenWords"></param>
-        /// <param name="sequence"></param>
-        /// <param name="sequenceLength"></param>
-        /// <returns></returns>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <param name="sequence">Best sequence at the current time</param>
+        /// <param name="sequenceLength">Output word length</param>
+        /// <returns>The word `Best`</returns>
         private ForbiddenWord findBestSequenceWithShift(List<ForbiddenWord> forbiddenWords, ForbiddenWord sequence,
             int sequenceLength)
         {
@@ -135,11 +138,11 @@ namespace ForbiddenWordsLib
         }
 
         /// <summary>
-        ///     Добавляет к результирующей строке недостастающие символы до <paramref name="sequenceLength" />
+        ///     Adds missing characters to the resulting string up to <paramref name="sequenceLength" />
         /// </summary>
         /// <param name="wordIndex">The index of the word</param>
-        /// <param name="sequenceLength"></param>
-        /// <param name="wordRepetitions"></param>
+        /// <param name="sequenceLength">Output word length</param>
+        /// <param name="wordRepetitions">Repeated forbidden words</param>
         /// <returns>The repeated string</returns>
         private string CompleteSequence(int wordIndex, int sequenceLength, List<ForbiddenWord> wordRepetitions)
         {
@@ -158,12 +161,12 @@ namespace ForbiddenWordsLib
         }
 
         /// <summary>
-        ///     Находим лучшую последовательность, добавляя символы до sequenceLength
+        ///     Finding the best sequence by adding characters up to sequenceLength
         /// </summary>
-        /// <param name="forbiddenWords"></param>
-        /// <param name="wordRepetitions"></param>
-        /// <param name="sequenceLength"></param>
-        /// <returns></returns>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <param name="wordRepetitions">Repeated forbidden words</param>
+        /// <param name="sequenceLength">Output word length</param>
+        /// <returns>Best sequence that can be improved</returns>
         private ForbiddenWord FindBestSequence(List<ForbiddenWord> forbiddenWords, List<ForbiddenWord> wordRepetitions,
             int sequenceLength)
         {
@@ -186,10 +189,11 @@ namespace ForbiddenWordsLib
         }
 
         /// <summary>
-        ///     Expanding all words to the desired length
+        ///     Expanding all words to the desired length.
+        ///     Changing wordRepetitions.
         /// </summary>
-        /// <param name="forbiddenWords">Словарь со штрафами</param>
-        /// <param name="wordRepetitions">Пустой список</param>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <param name="wordRepetitions">Output of repeated forbidden words</param>
         private void ExpandWord(List<ForbiddenWord> forbiddenWords, List<ForbiddenWord> wordRepetitions)
         {
             var indexes = findIndexes(forbiddenWords);
@@ -207,10 +211,10 @@ namespace ForbiddenWordsLib
         }
 
         /// <summary>
-        ///     Находим индексы двух самых больших штрафов
+        ///     We find the indices of the two largest penalties
         /// </summary>
-        /// <param name="forbiddenWords">Словарь со штрафами</param>
-        /// <returns>!НЕ ПОНЯТНО!5 и 6?</returns>
+        /// <param name="forbiddenWords">List of forbidden words</param>
+        /// <returns>A named tuple of two indexes of the two largest penalties</returns>
         private (int, int) findIndexes(List<ForbiddenWord> forbiddenWords)
         {
             var firstIndex = 0;
@@ -228,8 +232,9 @@ namespace ForbiddenWordsLib
             return (firstIndex, secondIndex);
         }
     }
+
     /// <summary>
-    /// 
+    ///     A class for working with strings
     /// </summary>
     public static class StringUtils
     {
@@ -259,7 +264,7 @@ namespace ForbiddenWordsLib
         ///     Calculates the string penalty
         /// </summary>
         /// <param name="str">The string</param>
-        /// <param name="forbiddenWords">Словарь запрещённых слов</param>
+        /// <param name="forbiddenWords">List of forbidden words</param>
         /// <returns>The string penalty</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public static int GetStringPenalty(string str, List<ForbiddenWord> forbiddenWords)
@@ -272,17 +277,17 @@ namespace ForbiddenWordsLib
             return penalty;
         }
     }
+
     /// <summary>
-    /// 
+    ///     A class for working with mathematics
     /// </summary>
     public static class MathUtils
     {
-        // TODO(andreymlv): Исправить комментарии
         /// <summary>
-        /// перестановка a = b, и наоборот        
+        ///     Swaps the parameter values using a ref
         /// </summary>
-        /// <param name="a">Число которое надо поменять</param>
-        /// <param name="b">Число на которое надо поменять</param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
         private static void Swap(ref int a, ref int b)
         {
             (a, b) = (b, a);

@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 using ForbiddenWordsLib;
 
 namespace ForbiddenWordsWinForms
 {
-    public partial class forbiddenWordForm : Form
+    public partial class ForbiddenWordForm : Form
     {
-        public forbiddenWordForm()
+        public ForbiddenWordForm()
         {
             InitializeComponent();
         }
@@ -27,63 +20,51 @@ namespace ForbiddenWordsWinForms
 
             try
             {
+                var forbiddenWords = WorkFile.ReadFile(path, out var m);
                 try
                 {
-                    var forbiddenWords = WorkFile.ReadFile(path, out int M);
-                    try
-                    {
-                        bestWord = fWUtils.MakeBestWord(M, forbiddenWords.Count, forbiddenWords);
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                    finally
-                    {
-                        bestTb.Text = bestWord.Word;
-                        penaltyTb.Text = bestWord.Penalty.ToString();
-                    }
+                    bestWord = fWUtils.MakeBestWord(m, forbiddenWords.Count, forbiddenWords);
                 }
-                catch (IOException ioException)
+                finally
                 {
-                    var message = ioException.Message;
-                    var caption = "Error Detected in Input";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    var result = MessageBox.Show(message, caption, buttons);
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    var message = "The content of the file is incorrect.\n" +
-                        "Read the terms of the problem, check the contents of the file.";
-                    var caption = "Error";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    var result = MessageBox.Show(message, caption, buttons);
-                }
-                catch (ArgumentException argumentException)
-                {
-                    var message = "File path not entered.\n" + argumentException.Message;
-                    var caption = "Error Detected in Input";
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    var result = MessageBox.Show(message, caption, buttons);
-                }
-                catch (FormatException formatException)
-                {
-                    var message = "The content of the file is incorrect.\n" +
-                        "Read the terms of the problem, check the contents of the file.";
-                    var caption = formatException.Message;
-                    MessageBoxButtons buttons = MessageBoxButtons.OK;
-                    var result = MessageBox.Show(message, caption, buttons);
+                    bestTb.Text = bestWord.Word;
+                    penaltyTb.Text = bestWord.Penalty.ToString();
                 }
             }
-            catch (Exception)
+            catch (IOException ioException)
             {
-                throw;
+                var message = ioException.Message;
+                var caption = "Error Detected in Input";
+                var buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                var message = "The content of the file is incorrect.\n" +
+                              "Read the terms of the problem, check the contents of the file.";
+                var caption = "Error";
+                var buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
+            }
+            catch (ArgumentException argumentException)
+            {
+                var message = "File path not entered.\n" + argumentException.Message;
+                var caption = "Error Detected in Input";
+                var buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
+            }
+            catch (FormatException formatException)
+            {
+                var message = "The content of the file is incorrect.\n" +
+                              "Read the terms of the problem, check the contents of the file.";
+                var caption = formatException.Message;
+                var buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
             }
         }
 
         private void filePathTb_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void clearBtn_Click(object sender, EventArgs e)

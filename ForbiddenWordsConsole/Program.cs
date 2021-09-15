@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ForbiddenWordsLib;
 
 namespace ForbiddenWordsConsole
@@ -10,8 +9,8 @@ namespace ForbiddenWordsConsole
         {
             var fWUtils = new ForbiddenWordUtils();
             var strName = "test.txt";
-            var forbiddenWords = ForbiddenWordsLib.WorkFile.ReadFile(strName, out int M);
-            var bestWord = fWUtils.MakeBestWord(M, forbiddenWords.Count, forbiddenWords);
+            var forbiddenWords = WorkFile.ReadFile(strName, out var m);
+            var bestWord = fWUtils.MakeBestWord(m, forbiddenWords.Count, forbiddenWords);
             Console.WriteLine($"Best: {bestWord.Word}\nPenalty: {bestWord.Penalty}");
         }
     }
